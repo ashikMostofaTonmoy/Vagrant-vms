@@ -26,11 +26,11 @@ install_essential_tools() {
     distribution=$(detect_distribution)
     case "$distribution" in
         ubuntu)
-            sudo apt-get update
-            sudo apt-get install -y curl git
+            sudo apt update
+            sudo apt install -y curl git net-tools telnet
             ;;
         centos)
-            sudo yum install -y curl git
+            sudo yum install -y curl git net-tools telnet
             ;;
         *)
             echo "Unsupported distribution: $distribution"
@@ -97,9 +97,10 @@ enable_plugins() {
 
 # Main script
 install_essential_tools
-install_zsh
-change_shell
-install_oh_my_zsh
-install_plugins
-set_zsh_theme
-enable_plugins
+
+# install_zsh
+# change_shell
+# install_oh_my_zsh
+# install_plugins
+# set_zsh_theme
+# enable_plugins
