@@ -60,12 +60,12 @@ install_zsh() {
 # Change the default shell to Zsh
 change_shell() {
     # sudo chsh -s "$(which zsh)" "$USER"
-    sudo chsh -s "$(which zsh)"
+    chsh -s "$(which zsh)"
 }
 
 # Install Oh-My-Zsh
 install_oh_my_zsh() {
-    sudo sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" < /dev/null
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" < /dev/null
 }
 
 # Install additional plugins
@@ -97,7 +97,6 @@ enable_plugins() {
 
 # Main script
 install_essential_tools
-
 # install_zsh
 # change_shell
 # install_oh_my_zsh

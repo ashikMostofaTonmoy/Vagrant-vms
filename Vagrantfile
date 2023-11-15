@@ -3,8 +3,9 @@
 
 Vagrant.configure("2") do |config|
 
-    machine_names = ["proxy-server", "master1", "master2", "worker1", "worker2"]
-  
+    # machine_names = ["proxy-server", "master1", "master2", "worker1", "worker2"]
+    machine_names = ["master1", "master2", "master3", "worker1", "worker2"]
+
     machine_names.each do |name|
         config.vm.define name do |machine|
             machine.vm.box = "generic/ubuntu2204"
@@ -18,6 +19,7 @@ Vagrant.configure("2") do |config|
                 vb.memory = "4096"
                 vb.cpus = 1
             end
+            machine.vm.synced_folder "syncfolder/", "/data/sync" , create: true 
             machine.vm.provision "shell", path: "install_zsh.sh"
         end
     end
