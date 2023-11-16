@@ -5,6 +5,8 @@ Useful links :
 1. [Vagrant Cheat Sheet + Get Started with Vagrant](https://www.pluralsight.com/resources/blog/cloud/vagrant-cheat-sheet-get-started-with-vagrant)
 2. [vagrant-cheat-sheet.md](https://gist.github.com/ashikMostofaTonmoy/2990e9036f58d81fe04a4578b965fb72)
 
+> NB: Default password of the vagrant machine is `vagrant`
+
 Check status of the vm described in `vagrant` file.
 
 ```sh
@@ -35,13 +37,13 @@ Resume a suspended machine (vagrant up works just fine for this as well)
 vagrant resume
 ```
 
-Forces reprovisioning of the vagrant machine
+Forces reprovision of the `provision` script of the vagrant file in the vagrant machine
 
 ```sh
 vagrant provision 
 ```
 
-Restart the virtual machine and force provisioning
+Restart the virtual machine and force provisioning script
 
 ```sh
 vagrant reload --provision
