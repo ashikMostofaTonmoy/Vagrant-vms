@@ -187,7 +187,7 @@ for newnode in "${workers[@]}"; do
   systemctl start rke2-agent.service
   exit
 EOF
-  echo -e " \033[32;5mMaster node joined successfully!\033[0m"
+  echo -e " \033[32;5mWorker node joined successfully!\033[0m"
 done
 
 #Step 8: Setup Kube-VIP as LoadBalancer
