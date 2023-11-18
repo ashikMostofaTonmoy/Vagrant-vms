@@ -4,6 +4,7 @@
 Vagrant.configure("2") do |config|
 
     machine_ips = {
+      "admin"   => "192.168.1.209",
       "master1" => "192.168.1.210",
       "master2" => "192.168.1.211",
       "master3" => "192.168.1.212",

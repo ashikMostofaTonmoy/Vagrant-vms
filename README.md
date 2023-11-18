@@ -7,6 +7,8 @@ Useful links :
 
 > NB: Default password of the vagrant machine is `vagrant`
 
+## Vagrant commands
+
 * Check status of the vm described in `vagrant` file.
 
 ```sh
@@ -69,3 +71,10 @@ vagrant reload
     ```sh
     vagrant ssh-config > vagrant-ssh
     ```
+
+## Vagrant Plugins
+
+```sh
+vagrant plugin install vagrant-vboxmanage
+vagrant plugin install vagrant-vbguest
+```
