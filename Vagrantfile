@@ -18,7 +18,7 @@ Vagrant.configure("2") do |config|
             machine.vm.box = "generic/ubuntu2204"
             machine.vm.network "public_network", ip: ip
             machine.vm.hostname = name
-            machine.disksize.size = '40GB'
+            machine.vm.disk :disk, size: "40GB", primary: true
             machine.vm.provider "virtualbox" do |vb|
                 vb.memory = "4096"
                 vb.cpus = 1
