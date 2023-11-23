@@ -27,6 +27,12 @@ Useful links :
     vagrant reload
     ```
 
+* Suspends or pause the vm. so that you can use `vagrent resume`
+
+    ```sh
+    vagrant suspend
+    ```
+
 * Stoping vm
 
     ```sh
