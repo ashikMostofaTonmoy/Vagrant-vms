@@ -11,21 +11,21 @@ Useful links :
 
 * Check status of the vm described in `vagrant` file.
 
-```sh
-vagrant status
-```
+    ```sh
+    vagrant status
+    ```
 
 * Starting vm for the first time. If any error occers, then you can use this too. for second times it won't change your other configuration.
 
-```sh
-vagrant up
-```
+    ```sh
+    vagrant up
+    ```
 
 * Restarts vagrant machine, loads new Vagrantfile configuration
 
-```sh
-vagrant reload
-```
+    ```sh
+    vagrant reload
+    ```
 
 * Stoping vm
 
