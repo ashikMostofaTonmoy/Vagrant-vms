@@ -1,0 +1,40 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+  machine_credentials = {
+    "admin"   => { ip: "192.168.1.209", memory: 4096, cpus: 2, username: "adminuser", password: "adminpassword" },
+    "master1" => { ip: "192.168.1.210", username: "masteruser1", password: "masterpassword1" },
+    "master2" => { ip: "192.168.1.211", username: "masteruser2", password: "masterpassword2" },
+    "master3" => { ip: "192.168.1.212", username: "masteruser3", password: "masterpassword3" },
+    "worker1" => { ip: "192.168.1.213", username: "workeruser1", password: "workerpassword1" },
+    "worker2" => { ip: "192.168.1.214", username: "workeruser2", password: "workerpassword2" }
+  }
+
+  machine_credentials.each do |name, config_opts|
+    config.vm.define name do |machine|
+      machine.vm.box = "generic/ubuntu2204"
+      machine.vm.network "public_network", ip: config_opts[:ip]
+      machine.vm.hostname = name
+      machine.vm.disk :disk, size: "40GB", primary: true
+      machine.vm.provider "virtualbox" do |vb|
+        vb.memory = config_opts.fetch(:memory, "3072")
+        vb.cpus = config_opts.fetch(:cpus, 1)
+      end
+      machine.vm.synced_folder "syncfolder/", "/data/sync", create: true 
+      machine.vm.provision "shell" do |s|
+        s.inline = <<-SHELL
+          useradd -m -p $(openssl passwd -1 #{config_opts[:password]}) #{config_opts[:username]}
+          mkdir -p /home/#{config_opts[:username]}/.ssh
+          echo #{ssh_pub_key} >> /home/#{config_opts[:username]}/.ssh/authorized_keys
+          chown -R #{config_opts[:username]}: /home/#{config_opts[:username]}/.ssh
+          chmod 700 /home/#{config_opts[:username]}/.ssh
+          chmod 600 /home/#{config_opts[:username]}/.ssh/authorized_keys
+          apt update && apt install -y curl git net-tools telnet
+        SHELL
+      end
+    end
+  end
+
+end
