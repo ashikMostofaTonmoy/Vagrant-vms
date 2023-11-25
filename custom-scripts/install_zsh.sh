@@ -59,8 +59,8 @@ install_zsh() {
 
 # Change the default shell to Zsh
 change_shell() {
-    # sudo chsh -s "$(which zsh)" "$USER"
-    chsh -s "$(which zsh)"
+    sudo chsh -s "$(which zsh)" "$USER"
+    # chsh -s "$(which zsh)"
 }
 
 # Install Oh-My-Zsh
