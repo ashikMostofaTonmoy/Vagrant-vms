@@ -22,3 +22,15 @@ docker run -d --restart=unless-stopped \
   --privileged \
   rancher/rancher:latest
 ```
+
+```sh
+docker run -d --restart=unless-stopped \
+  -p 8080:80 -p 8443:443 \
+  -v ./rancher-data:/var/lib/rancher \
+  --privileged \
+  rancher/rancher:latest
+
+```
+https://ranchermanager.docs.rancher.com/pages-for-subheaders/rancher-on-a-single-node-with-docker#option-a-default-rancher-generated-self-signed-certificate
+
+https://ranchermanager.docs.rancher.com/reference-guides/single-node-rancher-in-docker/advanced-options
