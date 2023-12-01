@@ -97,9 +97,9 @@ enable_plugins() {
 
 # Main script
 install_essential_tools
-# install_zsh
-# change_shell
-# install_oh_my_zsh
-# install_plugins
-# set_zsh_theme
-# enable_plugins
+install_zsh
+change_shell
+install_oh_my_zsh
+install_plugins
+set_zsh_theme
+enable_plugins
