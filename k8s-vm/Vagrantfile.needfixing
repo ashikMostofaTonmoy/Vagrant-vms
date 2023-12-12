@@ -1,0 +1,73 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+  # Define the base VM
+  config.vm.define "base" do |base|
+    base.vm.box = "generic/ubuntu2204"
+    base.vm.network "public_network", ip: "192.168.1.208"
+    base.vm.hostname = "base"
+    base.vm.disk :disk, size: "40GB", primary: true
+    base.vm.provider "virtualbox" do |vb|
+      vb.memory = 4096
+      vb.cpus = 2
+    end
+    base.vm.synced_folder "syncfolder/", "/data/sync", create: true
+    base.vm.provision "shell" do |s|
+      ssh_pub_key = File.readlines("ssh_keys/vmkey.pub").first.strip
+      s.inline = <<-SHELL
+        echo #{ssh_pub_key}
+        echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
+        echo #{ssh_pub_key} >> /root/.ssh/authorized_keys
+        cat /home/vagrant/.ssh/authorized_keys
+        apt update && apt install -y curl git net-tools telnet
+      SHELL
+    end
+  end
+
+  # Turn off the base VM after provisioning
+  config.vm.define "base" do |base|
+    base.vm.provider "virtualbox" do |vb|
+      vb.gui = false
+      vb.customize ["modifyvm", :id, "--uart1", "0x3F8", "4"]
+      vb.customize ["modifyvm", :id, "--uartmode1", "disconnected"]
+      vb.customize ["modifyvm", :id, "--uart2", "off"]
+    end
+  end
+
+  # Clone the base VM for other machines
+  machine_ips = {
+    "admin" => { ip: "192.168.1.209", memory: 3072, cpus: 2, storage: "40GB" },
+    "master1" => { ip: "192.168.1.210", memory: 3072, cpus: 1, storage: "40GB" },
+    "master2" => { ip: "192.168.1.211", memory: 3072, cpus: 1, storage: "40GB" },
+    "master3" => { ip: "192.168.1.212", memory: 3072, cpus: 1, storage: "40GB" },
+    "worker1" => { ip: "192.168.1.213", memory: 3072, cpus: 1, storage: "40GB" },
+    "worker2" => { ip: "192.168.1.214", memory: 3072, cpus: 1, storage: "40GB" }
+  }
+
+  machine_ips.each do |name, config_opts|
+    config.vm.define name do |machine|
+      machine.vm.box = "generic/ubuntu2204"  # Use the name of the base machine
+      machine.vm.hostname = name
+      machine.vm.provider "virtualbox" do |vb|
+        vb.linked_clone = true
+        vb.memory = config_opts.fetch(:memory, 3072)
+        vb.cpus = config_opts.fetch(:cpus, 1)
+        vb.customize ['modifyhd', machine.disk_path, '--resize', config_opts.fetch(:storage, '40GB')]
+      end
+      machine.vm.network "public_network", ip: config_opts[:ip]
+      machine.vm.synced_folder "syncfolder/", "/data/sync", create: true
+      machine.vm.provision "shell" do |s|
+        ssh_pub_key = File.readlines("ssh_keys/vmkey.pub").first.strip
+        s.inline = <<-SHELL
+          echo #{ssh_pub_key}
+          echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
+          echo #{ssh_pub_key} >> /root/.ssh/authorized_keys
+          cat /home/vagrant/.ssh/authorized_keys
+          apt update && apt install -y curl git net-tools telnet
+        SHELL
+      end
+    end
+  end
+end
