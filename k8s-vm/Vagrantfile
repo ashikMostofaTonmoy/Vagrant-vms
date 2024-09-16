@@ -4,12 +4,13 @@
 Vagrant.configure("2") do |config|
 
     machine_ips = {
-      "admin"   => { ip: "192.168.1.209", memory: 4096, cpus: 2 },
-      "master1" => { ip: "192.168.1.210" },
-      "master2" => { ip: "192.168.1.211" },
-      "master3" => { ip: "192.168.1.212" },
-      "worker1" => { ip: "192.168.1.213" },
-      "worker2" => { ip: "192.168.1.214" }
+    #   "admin"   => { ip: "192.168.1.209", memory: 4096, cpus: 2 },
+      "master1" => { ip: "192.168.1.210" , memory: 4096, cpus: 2},
+    #   "master2" => { ip: "192.168.1.211" , memory: 4096, cpus: 2},
+    #   "master3" => { ip: "192.168.1.212" , memory: 4096, cpus: 2},
+      "worker1" => { ip: "192.168.1.213" , memory: 10240, cpus: 3},
+      # "worker2" => { ip: "192.168.1.214" },
+      "provisioner" => { ip: "192.168.1.215" , memory: 1024, cpus: 1}
     }
   
 
@@ -20,8 +21,8 @@ Vagrant.configure("2") do |config|
             machine.vm.hostname = name
             machine.vm.disk :disk, size: "40GB", primary: true
             machine.vm.provider "virtualbox" do |vb|
-                vb.linked_clone = true
-                vb.memory = config_opts.fetch(:memory, "3072")
+                # vb.linked_clone = true
+                vb.memory = config_opts.fetch(:memory, "2048")
                 vb.cpus = config_opts.fetch(:cpus, 1)
             end
             machine.vm.synced_folder "syncfolder/", "/data/sync", create: true 
@@ -32,10 +33,15 @@ Vagrant.configure("2") do |config|
                   echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
                   echo #{ssh_pub_key} >> /root/.ssh/authorized_keys
                   cat /home/vagrant/.ssh/authorized_keys
+                #   apt update && apt upgrade -y
                   apt update && apt install -y curl git net-tools telnet
+                  apt install -y socat conntrack ebtables ipset
+
                 SHELL
             end
         end
     end
   
 end
+
+# ssh -i ssh_keys/vmkey root@192.168.1.210
